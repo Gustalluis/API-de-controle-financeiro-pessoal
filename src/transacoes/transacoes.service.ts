@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTransacoeDto } from './dto/create-transacoe.dto';
-import { UpdateTransacoeDto } from './dto/update-transacoe.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Transacao, TransacaoDocument } from './schemas/transacao.schema';
+import { CreateTransacaoDto } from './dto/create-transacao.dto';
 
 @Injectable()
 export class TransacoesService {
-  create(createTransacoeDto: CreateTransacoeDto) {
-    return 'This action adds a new transacoe';
+  constructor(
+    @InjectModel(Transacao.name) private transacaoModel: Model<TransacaoDocument>,
+  ) {}
+
+  async create(createTransacaoDto: CreateTransacaoDto): Promise<Transacao> {
+    const novaTransacao = new this.transacaoModel(createTransacaoDto);
+    return novaTransacao.save();
   }
 
-  findAll() {
-    return `This action returns all transacoes`;
-  }
+  async findAllConsolidado() {
+    const historico = await this.transacaoModel.find().exec();
 
-  findOne(id: number) {
-    return `This action returns a #${id} transacoe`;
-  }
+    let saldoTotal = 0;
+    let totalDespesas = 0;
+    let totalGastoImpulso = 0;
 
-  update(id: number, updateTransacoeDto: UpdateTransacoeDto) {
-    return `This action updates a #${id} transacoe`;
-  }
+    historico.forEach((t) => {
+      if (t.tipo === 'receita') {
+        saldoTotal += t.valor;
+      } else if (t.tipo === 'despesa') {
+        saldoTotal -= t.valor;
+        totalDespesas += t.valor;
 
-  remove(id: number) {
-    return `This action removes a #${id} transacoe`;
+        if (t.consumoConsciente === false) {
+          totalGastoImpulso += t.valor;
+        }
+      }
+    });
+
+    return {
+      historico,
+      metricas: {
+        saldoTotal,
+        totalDespesas,
+        totalGastoImpulso,
+      },
+    };
   }
 }

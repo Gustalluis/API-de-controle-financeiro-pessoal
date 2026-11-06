@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle Financeiro - ODS 1 & 12</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Gestão Financeira</h1>
+            <p class="ods-subtitle">Foco em Consumo Consciente (ODS 1 & 12)</p>
+        </header>
+
+        <!-- DASHBOARD DE SAÚDE FINANCEIRA -->
+        <section class="dashboard">
+            <div class="card">
+                <h3>Saldo Total</h3>
+                <p id="saldoTotal" class="valor-neutro">R$ 0,00</p>
+            </div>
+            <div class="card">
+                <h3>Total Despesas</h3>
+                <p id="totalDespesas" class="valor-despesa">R$ 0,00</p>
+            </div>
+            <div class="card destaque-impulso">
+                <h3>Gasto por Impulso</h3>
+                <p id="totalGastoImpulso" class="valor-alerta">R$ 0,00</p>
+            </div>
+        </section>
+
+        <!-- FORMULÁRIO DE CADASTRO -->
+        <section class="form-section">
+            <h2>Nova Transação</h2>
+            <form id="transacaoForm">
+                <div class="input-group">
+                    <label for="descricao">Descrição</label>
+                    <input type="text" id="descricao" required placeholder="Ex: Compras de supermercado">
+                </div>
+
+                <div class="input-group">
+                    <label for="valor">Valor (R$)</label>
+                    <input type="number" id="valor" step="0.01" required placeholder="0.00">
+                </div>
+
+                <div class="input-group">
+                    <label for="tipo">Tipo</label>
+                    <select id="tipo" required>
+                        <option value="receita">Receita</option>
+                        <option value="despesa">Despesa</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="categoria">Categoria</label>
+                    <input type="text" id="categoria" required placeholder="Ex: Alimentação, Lazer">
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="consumoConsciente"> Consumo Consciente / Essencial?
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-submit">Adicionar Transação</button>
+            </form>
+        </section>
+
+        <!-- EXTRATO / HISTÓRICO -->
+        <section class="history-section">
+            <h2>Extrato Recente</h2>
+            <div id="historicoLista" class="lista-transacoes">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
